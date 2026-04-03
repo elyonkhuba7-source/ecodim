@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Présentation Ecodim</title>
+    <style>
+        :root {
+            --ink: #18130f;
+            --paper: rgba(255,255,255,0.96);
+            --gold: #d59b2b;
+            --leaf: #1f8a70;
+            --fire: #c84c2d;
+            --line: rgba(124,95,57,0.15);
+            --shadow: 0 22px 44px rgba(39,28,14,0.16);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top, rgba(213,155,43,0.16), transparent 25%),
+                linear-gradient(180deg, #fdfbf7 0%, #f4ede2 100%);
+        }
+        .shell { max-width: 1100px; margin: 0 auto; padding: 24px 16px 40px; }
+        .topbar { display: flex; justify-content: space-between; gap: 16px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
+        .brand { display: flex; align-items: center; gap: 14px; }
+        .logo {
+            width: 84px; height: 84px; border-radius: 22px; padding: 10px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.98), rgba(242,231,211,0.95));
+            border: 1px solid var(--line); box-shadow: var(--shadow);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .logo img { max-width: 100%; max-height: 64px; }
+        .brand p { margin: 0 0 6px; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #7a674f; font-weight: 800; }
+        .brand h1 { margin: 0; font-size: clamp(28px, 4vw, 40px); font-family: Georgia, "Times New Roman", serif; }
+        .controls { display: flex; gap: 10px; flex-wrap: wrap; }
+        button {
+            border: none; border-radius: 14px; padding: 12px 16px; font: inherit; font-weight: 800; cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        button:hover { transform: translateY(-1px); }
+        .dark { background: #111; color: #fff; }
+        .gold { background: linear-gradient(135deg, #e0b14a, #c88a16); color: #22170a; }
+        .leaf { background: linear-gradient(135deg, #2ea07d, #146b50); color: #fff; }
+        .progress { height: 10px; background: rgba(17,17,17,0.08); border-radius: 999px; overflow: hidden; margin-bottom: 18px; }
+        .bar { height: 100%; width: 0; background: linear-gradient(90deg, #d59b2b, #1f8a70); transition: width 0.25s ease; }
+        .slide {
+            display: none; background: var(--paper); border-radius: 28px; border: 1px solid var(--line);
+            box-shadow: var(--shadow); padding: 32px; min-height: 620px;
+        }
+        .slide.active { display: block; }
+        .grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; }
+        .kicker { margin: 0 0 10px; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #8c7451; font-weight: 800; }
+        h2 { margin: 0 0 16px; font-size: clamp(32px, 5vw, 54px); line-height: 0.98; }
+        p { margin: 0 0 18px; font-size: 18px; line-height: 1.7; color: #564a3f; }
+        .box, .narration {
+            background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 22px;
+            box-shadow: 0 16px 28px rgba(39,28,14,0.08);
+        }
+        .box h3, .narration h3 { margin: 0 0 16px; font-size: 20px; }
+        .item {
+            padding: 13px 15px; border-radius: 16px; background: #faf5ec; border: 1px solid rgba(124,95,57,0.12);
+            margin-bottom: 10px; font-weight: 700; color: #3d3329;
+        }
+        .item:last-child { margin-bottom: 0; }
+        .narration { margin-top: 22px; background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(246,238,225,0.98)); }
+        .counter { margin-top: 16px; color: #736351; font-weight: 800; }
+        .three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+        @media (max-width: 900px) {
+            .grid, .three { grid-template-columns: 1fr; }
+            .slide { min-height: auto; }
+        }
+        @media print {
+            .topbar, .progress { display: none; }
+            .slide { display: block !important; page-break-after: always; box-shadow: none; min-height: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <div class="topbar">
+            <div class="brand">
+                <div class="logo"><img src="logo.jpg.jpg" alt="Logo"></div>
+                <div>
+                    <p>Support vidéo</p>
+                    <h1>Présentation Ecodim</h1>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="prevBtn" class="dark">Précédent</button>
+                <button id="autoBtn" class="gold">Lecture auto</button>
+                <button id="nextBtn" class="leaf">Suivant</button>
+            </div>
+        </div>
+
+        <div class="progress"><div id="bar" class="bar"></div></div>
+
+        <section class="slide active">
+            <div class="grid">
+                <div>
+                    <p class="kicker">Slide 1</p>
+                    <h2>Vue d’ensemble du projet</h2>
+                    <p>Ecodim est une plateforme de gestion pour l’école du dimanche. Elle centralise les inscriptions, les classes, les moniteurs, les présences, les leçons, les évaluations, les finances et les rapports.</p>
+                    <div class="item">Gestion admin et moniteur séparée</div>
+                    <div class="item">Fonctionnement sur ordinateur et téléphone</div>
+                    <div class="item">Impression de plusieurs fiches et rapports</div>
+                </div>
+                <div class="box">
+                    <h3>Parcours général</h3>
+                    <div class="item">Connexion</div>
+                    <div class="item">Inscriptions et classes</div>
+                    <div class="item">Présences et leçons</div>
+                    <div class="item">Évaluations, finances et rapports</div>
+                </div>
+            </div>
+            <div class="narration">
+                <h3>Narration</h3>
+                <p>Bonjour. Cette présentation explique toutes les fonctionnalités principales de la plateforme Ecodim, depuis la connexion jusqu’aux rapports finaux utilisés par l’administrateur et les moniteurs.</p>
+            </div>
+            <div class="counter">1 / 9</div>
+        </section>
+
+        <section class="slide">
+            <div class="grid">
+                <div>
+                    <p class="kicker">Slide 2</p>
+                    <h2>Connexion et accès</h2>
+                    <p>La page de login permet la connexion sécurisée et la création d’un compte réservé aux moniteurs. L’administrateur conserve son accès séparé.</p>
+                    <div class="item">Création de compte moniteur sur le login</div>
+                    <div class="item">Mot de passe fort obligatoire</div>
+                    <div class="item">Blocage automatique des comptes interdits</div>
+                </div>
+                <div class="box">
+                    <h3>Rôles</h3>
+                    <div class="item">Admin : contrôle complet</div>
+                    <div class="item">Moniteur : accès limité à ses données</div>
+                </div>
+            </div>
+            <div class="narration"><p>La plateforme distingue clairement l’administrateur et le moniteur. Le login autorise aussi la création d’un compte moniteur, sans jamais donner un droit administrateur.</p></div>
+            <div class="counter">2 / 9</div>
+        </section>
+
+        <section class="slide">
+            <div class="grid">
+                <div>
+                    <p class="kicker">Slide 3</p>
+                    <h2>Inscriptions des enfants</h2>
+                    <p>L’administrateur peut enregistrer les enfants, modifier une fiche existante, supprimer une inscription et imprimer la fiche au format papier.</p>
+                    <div class="item">Fiche enfant complète</div>
+                    <div class="item">Responsable 1 et Responsable 2</div>
+                    <div class="item">Liste des enfants avec actions</div>
+                </div>
+                <div class="box">
+                    <h3>Actions disponibles</h3>
+                    <div class="item">Ajouter</div>
+                    <div class="item">Modifier</div>
+                    <div class="item">Supprimer</div>
+                    <div class="item">Imprimer la fiche</div>
+                </div>
+            </div>
+            <div class="narration"><p>La fiche d’inscription a été rapprochée du document papier et prend en charge les informations des deux responsables, avec impression dédiée.</p></div>
+            <div class="counter">3 / 9</div>
+        </section>
+
+        <section class="slide">
+            <div class="grid">
+                <div>
+                    <p class="kicker">Slide 4</p>
+                    <h2>Classes et synchronisation</h2>
+                    <p>Les classes sont gérées par nom, puis liées aux moniteurs et aux enfants. La visibilité des enfants chez le moniteur dépend de la classe assignée.</p>
+                    <div class="item">Création des classes</div>
+                    <div class="item">Affectation des moniteurs à une classe</div>
+                    <div class="item">Enfants visibles selon la classe</div>
+                </div>
+                <div class="box">
+                    <h3>Principe</h3>
+                    <p>Si un enfant appartient à une autre classe, il n’apparaît pas chez ce moniteur. L’administrateur conserve une vue globale pour corriger les affectations.</p>
+                </div>
+            </div>
+            <div class="narration"><p>La logique de classe structure toute l’application. C’est elle qui synchronise les inscriptions, les présences et les accès des moniteurs.</p></div>
+            <div class="counter">4 / 9</div>
+        </section>
+
+        <section class="slide">
+            <div class="grid">
+                <div>
+                    <p class="kicker">Slide 5</p>
+                    <h2>Présences et appel</h2>
+                    <p>Le moniteur peut faire l’appel de sa classe selon la date choisie. L’administrateur peut consulter les états de présence et les historiques.</p>
+                    <div class="item">Appel par date</div>
+                    <div class="item">Présent / absent par enfant</div>
+                    <div class="item">Accès limité à la classe du moniteur</div>
+                </div>
+                <div class="box">
+                    <h3>Utilité</h3>
+                    <div class="item">Suivi de l’assiduité</div>
+                    <div class="item">Rapports de présence</div>
+                </div>
+            </div>
+            <div class="narration"><p>La page Présences est le point d’entrée du moniteur pour l’appel. Elle lui présente uniquement ce qu’il est autorisé à gérer.</p></div>
+            <div class="counter">5 / 9</div>
+        </section>
+
+        <section class="slide">
+            <div class="grid">
+                <div>
+                    <p class="kicker">Slide 6</p>
+                    <h2>Leçons et rapports prof</h2>
+                    <p>Les leçons sont liées à une classe et peuvent être assignées à un moniteur. Le moniteur complète ensuite le rapport prof avec les éléments pédagogiques.</p>
+                    <div class="item">Thème et sous-thème</div>
+                    <div class="item">Objectif pédagogique</div>
+                    <div class="item">Passages bibliques, activités et observations</div>
+                </div>
+                <div class="box">
+                    <h3>Cycle de vie</h3>
+                    <div class="item">Création ou assignation</div>
+                    <div class="item">Complétion par le moniteur</div>
+                    <div class="item">Clôture puis archivage dans les rapports</div>
+                </div>
+            </div>
+            <div class="narration"><p>Une fois la leçon terminée, elle rejoint les rapports consultables par l’administrateur. Cela permet un suivi pédagogique centralisé.</p></div>
+            <div class="counter">6 / 9</div>
+        </section>
+
+        <section class="slide">
+            <div class="grid">
+                <div>
+                    <p class="kicker">Slide 7</p>
+                    <h2>Évaluations et suivi des moniteurs</h2>
+                    <p>Le moniteur peut saisir des fiches d’évaluation et imprimer ses documents. L’administrateur consulte les fiches en format PDF ou imprimable.</p>
+                    <div class="item">Prise de note</div>
+                    <div class="item">Interrogation, devoirs, assiduité, TP</div>
+                    <div class="item">Accès admin pour lecture et suppression</div>
+                </div>
+                <div class="box">
+                    <h3>Gestion des moniteurs</h3>
+                    <div class="item">Profil complet</div>
+                    <div class="item">Mots de passe</div>
+                    <div class="item">Blocage ou déblocage</div>
+                    <div class="item">Suppression par admin uniquement</div>
+                </div>
+            </div>
+            <div class="narration"><p>Le suivi des moniteurs passe à la fois par leur profil, leurs accès, leurs évaluations et leurs rapports. L’administrateur garde ici un vrai contrôle de sécurité.</p></div>
+            <div class="counter">7 / 9</div>
+        </section>
+
+        <section class="slide">
+            <div class="grid">
+                <div>
+                    <p class="kicker">Slide 8</p>
+                    <h2>Finances et rapports hebdomadaires</h2>
+                    <p>La plateforme prend aussi en charge les mouvements financiers et les rapports hebdomadaires pédagogiques de l’administrateur.</p>
+                    <div class="item">Rapports journaliers, hebdomadaires, mensuels et annuels</div>
+                    <div class="item">Observation et impression</div>
+                    <div class="item">Suppression admin des mouvements</div>
+                </div>
+                <div class="box">
+                    <h3>Rapport hebdomadaire</h3>
+                    <div class="item">Contexte</div>
+                    <div class="item">Équipe pédagogique</div>
+                    <div class="item">Enseignements, effectifs, présences, absences</div>
+                </div>
+            </div>
+            <div class="narration"><p>Le module Finances permet de suivre les montants, d’imprimer les synthèses par période et de garder une traçabilité des mouvements saisis par l’administrateur.</p></div>
+            <div class="counter">8 / 9</div>
+        </section>
+
+        <section class="slide">
+            <div>
+                <p class="kicker">Slide 9</p>
+                <h2>Conclusion</h2>
+                <p>Ecodim est désormais un système de gestion complet pour l’école du dimanche, utilisable localement sur ordinateur et téléphone, avec une structure prête pour une future mise en ligne.</p>
+                <div class="three">
+                    <div class="box">Gestion complète des enfants, classes et moniteurs</div>
+                    <div class="box">Suivi pédagogique avec leçons, évaluations et rapports</div>
+                    <div class="box">Pilotage administratif avec sécurité, finances et impressions</div>
+                </div>
+                <div class="narration">
+                    <h3>Narration</h3>
+                    <p>En résumé, la plateforme Ecodim couvre l’ensemble du fonctionnement quotidien : connexion, inscriptions, classes, présences, leçons, évaluations, sécurité, finances et rapports. Elle peut encore évoluer, mais la base est déjà solide.</p>
+                </div>
+            </div>
+            <div class="counter">9 / 9</div>
+        </section>
+    </div>
+
+    <script>
+        const slides = Array.from(document.querySelectorAll('.slide'));
+        const bar = document.getElementById('bar');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const autoBtn = document.getElementById('autoBtn');
+        let index = 0;
+        let timer = null;
+
+        function render(nextIndex) {
+            index = (nextIndex + slides.length) % slides.length;
+            slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+            bar.style.width = (((index + 1) / slides.length) * 100) + '%';
+        }
+
+        function stopAuto() {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+                autoBtn.textContent = 'Lecture auto';
+                autoBtn.className = 'gold';
+            }
+        }
+
+        function startAuto() {
+            timer = setInterval(() => {
+                if (index === slides.length - 1) {
+                    stopAuto();
+                    return;
+                }
+                render(index + 1);
+            }, 8000);
+            autoBtn.textContent = 'Pause';
+            autoBtn.className = 'dark';
+        }
+
+        prevBtn.addEventListener('click', () => { stopAuto(); render(index - 1); });
+        nextBtn.addEventListener('click', () => { stopAuto(); render(index + 1); });
+        autoBtn.addEventListener('click', () => { timer ? stopAuto() : startAuto(); });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight') { stopAuto(); render(index + 1); }
+            if (event.key === 'ArrowLeft') { stopAuto(); render(index - 1); }
+            if (event.key === ' ') {
+                event.preventDefault();
+                timer ? stopAuto() : startAuto();
+            }
+        });
+
+        render(0);
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Ignore PHP session and environment files
+*.log
+*.zip
+*.mp4
+*.pptx
+__pycache__/
+exports/captures/
+exports/*.log
+exports/*.mp4
+
+# Windows / WAMP
+Thumbs.db
+desktop.ini
+node_modules/
+.vscode/
+
+# Composer / PHP
+vendor/
+composer.lock
+
+# Sensitive files
+.env
